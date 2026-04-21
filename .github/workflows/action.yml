@@ -18,6 +18,7 @@ jobs: #
         uses: actions/setup-node@v6 #
         with:
           node-version: 24
+      # npm ci é máis estrito que npm install, pois instala exactamente as dependencias indicadas en package-lock.json
       - name: Run npm #
         run: npm ci
 
