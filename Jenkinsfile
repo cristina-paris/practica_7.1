@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('Clone') {
             steps {
-                git branch: "main", url: 'https://github.com/cristina-paris/repositorio'
+                git branch: "main", url: 'https://github.com/cristina-paris/practica_7.1'
             }
         }
         stage('Build') {
