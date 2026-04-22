@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'node:20'  // Usar unha imaxe oficial de Node.js
+            image 'node:lts-slim'  // Usar unha imaxe oficial de Node.js
             //label 'docker'  // Etiqueta opcional para executar nun nodo con soporte Docker
             args '-u root'  // Opcional: Executar co usuario root si es necesario
         }
@@ -16,7 +16,7 @@ pipeline {
           stage('Instalar Dependencias') {
             steps {
                 script {
-                    sh 'npm install'
+                    sh 'npm ci'
                 }
             }
         }
