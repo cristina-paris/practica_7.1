@@ -1,33 +1,39 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:lts-slim'  // Usar unha imaxe oficial de Node.js
-            //label 'docker'  // Etiqueta opcional para executar nun nodo con soporte Docker
-            args '-u root'  // Opcional: Executar co usuario root si es necesario
-        }
+    environment {
+        LOGIN = "cparisfp"
+        IMAGEN = "${LOGIN}/myapp"
+        BUILD_NUMBER = "1"
+        USUARIO = 'USER_DOCKERHUB'
     }
 
-    //environment {
-        //NODE_HOME = '/usr/local/bin/node'  // Ruta á instalación de Node.js
-        //PATH = "${NODE_HOME}/bin:${env.PATH}"  // Asegurarse de que Node.js estea no PATH
-    //}
+    agent any
 
     stages {
-          stage('Instalar Dependencias') {
+        stage('Clone') {
+            steps {
+                git branch: "main", url: 'https://github.com/cristina-paris/practica_7.1'
+            }
+        }
+        stage('Build') {
             steps {
                 script {
-                    sh 'npm ci'
+                    newApp = docker.build "$IMAGEN:$BUILD_NUMBER"
                 }
             }
         }
-
-        stage('Probas Unitarias') {
+        stage('Deploy') {
             steps {
                 script {
-                    sh 'npm test'
+                    docker.withRegistry( '', USUARIO ) {
+                        newApp.push()
+                    }
                 }
             }
         }
-       
+        stage('Clean Up') {
+            steps {
+                sh "docker rmi $IMAGEN:$BUILD_NUMBER"
+                }
+        }
     }
 }
